@@ -1,23 +1,37 @@
 import React from "react";
 import Square from "./Square";
+import calculateWinner from "./api/calculateWinner";
 
 function Board() {
   const [state, setState] = React.useState({
-    squares: Array(9).fill(null)
+    squares: Array(9).fill(null),
+    xIsNext: true
   });
 
   function handleClick(index) {
-    const squares = state.squares.slice();
-    squares[index] = "X";
-    setState({ squares: squares });
-    alert(index);
+    if (state.squares[index]) {
+      return;
+    }
+    // Immutability
+    const squaresCopy = state.squares.slice();
+    squaresCopy[index] = state.xIsNext ? "X" : "O";
+    setState({
+      squares: squaresCopy,
+      xIsNext: !state.xIsNext
+    });
   }
   function renderSquare(index) {
     return (
       <Square value={state.squares[index]} onClick={() => handleClick(index)} />
     );
   }
-  const status = "Next player: X";
+  const winner = calculateWinner(state.squares);
+  let status;
+  if (winner) {
+    status = `Winner: ${winner}`;
+  } else {
+    status = `Next player: ${state.xIsNext ? "X" : "O"}`;
+  }
 
   return (
     <div>
