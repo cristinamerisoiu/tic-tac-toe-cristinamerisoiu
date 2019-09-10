@@ -12,6 +12,10 @@ function Board() {
     if (state.squares[index]) {
       return;
     }
+    if (winner) {
+      return;
+    }
+
     // Immutability
     const squaresCopy = state.squares.slice();
     squaresCopy[index] = state.xIsNext ? "X" : "O";
@@ -20,6 +24,7 @@ function Board() {
       xIsNext: !state.xIsNext
     });
   }
+
   function renderSquare(index) {
     return (
       <Square value={state.squares[index]} onClick={() => handleClick(index)} />
